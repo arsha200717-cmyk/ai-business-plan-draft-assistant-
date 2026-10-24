@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Business Plan Draft Assistant: Final Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bitter:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#17223b;--mute:#4b587a;--line:#c9d2e3;--accent:#f4c542;--on-accent:#17223b;--bad:#b3261e;--badbg:#fdeceb;--ok:#1f6b43;--okbg:#e5f4ec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#18223b;--ink:#eef2fb;--mute:#aab6d3;--line:#33425f;--bad:#ffb4ab;--badbg:#3a1f22;--ok:#8fe0b2;--okbg:#17352a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f172a;--card:#18223b;--ink:#eef2fb;--mute:#aab6d3;--line:#33425f;--bad:#ffb4ab;--badbg:#3a1f22;--ok:#8fe0b2;--okbg:#17352a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,system-ui,sans-serif;font-size:18px;line-height:1.55}
+h1,h2,h3{font-family:Bitter,Georgia,serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800}
+h2{font-size:clamp(1.5rem,4vw,2rem);font-weight:800}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0 0 .9em;max-width:62ch}
+.wrap{max-width:900px;margin:0 auto;padding:16px 18px 110px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0 14px}
+.top b{font-family:Bitter,Georgia,serif}
+.top button{font:inherit;font-size:.9rem;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.count{color:var(--mute);font-size:.9rem;margin-bottom:18px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.hero{padding:26px 4px 6px}
+.hero .q{font-size:1.25rem;max-width:30ch;color:var(--mute)}
+.chip{display:inline-block;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:4px 14px;font-weight:700;font-size:.95rem;margin:0 8px 8px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tabs button{font:inherit;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:6px 16px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.prompt{background:var(--bg);border-left:6px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:.98rem}
+label{display:block;font-weight:700;margin-top:12px}
+input[type=range]{width:100%;accent-color:#c98a00;height:32px}
+.val{float:right;font-weight:700}
+.out{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:14px}
+.out div{border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.out small{display:block;color:var(--mute)}
+.out b{font-size:1.35rem;font-family:Bitter,Georgia,serif}
+.neg{color:var(--bad)}.pos{color:var(--ok)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+td input{font:inherit;width:84px;padding:6px;border:2px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.err{border:2px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--card)}
+.said{font-weight:700}
+.reveal{margin-top:10px;display:none}
+.err.open .reveal{display:block}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:10px;padding:8px 16px;cursor:pointer}
+.tagbad{background:var(--badbg);color:var(--bad);border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.tagok{background:var(--okbg);color:var(--ok);border-radius:6px;padding:8px 10px}
+.ba{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:2px solid var(--line);border-radius:12px;overflow:hidden;min-width:520px}
+.ba div{padding:10px 12px;border-bottom:1px solid var(--line)}
+.ba .h{background:var(--bg);font-weight:700}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--line);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;gap:12px;z-index:5}
+.nav button{font:inherit;font-weight:700;font-size:1.05rem;min-width:120px;padding:12px 20px;border-radius:10px;border:2px solid var(--ink);cursor:pointer}
+#back{background:var(--card);color:var(--ink)}
+#next{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.nav button:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:3px solid #3b82f6;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+ul{padding-left:1.2em;margin:0 0 .9em}li{margin-bottom:.35em;max-width:62ch}
+.fld{font:inherit;width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+textarea.fld{min-height:110px;resize:vertical}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>Capstone 27 · Final Demo</b><button id="theme" type="button" aria-label="Switch light or dark view">Light / Dark</button></div>
+  <div class="bar" role="progressbar" aria-valuemin="1" aria-valuemax="8" id="pb"><i id="fill"></i></div>
+  <div class="count" id="count" aria-live="polite"></div>
+
+  <section id="s0" aria-label="Introduction">
+    <div class="hero">
+      <h1>AI Business Plan Draft Assistant</h1>
+      <p class="q">Can AI help write a first-draft business plan, and which parts are most likely to be wrong?</p>
+      <p><span class="chip">Fictional business: Sweet Crumbs Bakery</span><span class="chip">Presented by Arsha J Albert</span></p>
+    </div>
+    <div class="card">
+      <h3>What this demo shows</h3>
+      <ul>
+        <li>How a plan was drafted with prompts</li>
+        <li>A revenue model you can change yourself</li>
+        <li>The mistakes AI made, and how each was caught</li>
+        <li>Time with AI vs without AI, before and after results</li>
+        <li>Peer feedback on the website</li>
+      </ul>
+      <p>Press <b>Next</b> or use the right arrow key. No sign-in or internet service is needed after the page loads.</p>
+    </div>
+  </section>
+
+  <section id="s1" aria-label="Drafting with prompts">
+    <h2>Step 1: Draft the plan with prompts</h2>
+    <p>One prompt per section. Pick a section to see the prompt and the draft idea it produced.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="card" id="draftbox" role="tabpanel" aria-live="polite"></div>
+    <p>Tools used: ChatGPT, Gemini and Claude (free) for drafting and cross-checking, Google Sheets for numbers, Gamma for the deck.</p>
+  </section>
+
+  <section id="s2" aria-label="Revenue model">
+    <h2>Step 2: Try the revenue model</h2>
+    <p>Move the sliders. Every result is recalculated from the formulas below. Fixed costs stay at Rs. 1,33,000 a month and the setup cost is Rs. 6,00,000.</p>
+    <div class="card">
+      <label for="cust">Customers per day <span class="val" id="vcust"></span></label>
+      <input type="range" id="cust" min="40" max="140" step="5" value="80">
+      <label for="aov">Average order value (Rs.) <span class="val" id="vaov"></span></label>
+      <input type="range" id="aov" min="80" max="250" step="5" value="140">
+      <label for="days">Days open per month <span class="val" id="vdays"></span></label>
+      <input type="range" id="days" min="20" max="30" step="1" value="26">
+      <label for="cogs">Ingredient and packaging cost (% of sales) <span class="val" id="vcogs"></span></label>
+      <input type="range" id="cogs" min="30" max="55" step="1" value="40">
+      <div class="out" aria-live="polite">
+        <div><small>Monthly sales</small><b id="o1"></b></div>
+        <div><small>Gross profit</small><b id="o2"></b></div>
+        <div><small>Net profit per month</small><b id="o3"></b></div>
+        <div><small>Break-even customers per day</small><b id="o4"></b></div>
+        <div><small>Setup cost payback</small><b id="o5"></b></div>
+      </div>
+      <p style="margin-top:14px"><b>Formulas:</b> sales = customers × order value × days. Gross profit = sales × (1 − ingredient %). Net profit = gross profit − fixed costs. Break-even customers = fixed costs ÷ (margin × order value × days).</p>
+    </div>
+  </section>
+
+  <section id="s3" aria-label="Error log">
+    <h2>Step 3: What AI got wrong</h2>
+    <p>Each card shows a claim the AI made. Tap <b>Check it</b> to see the problem and the fix.</p>
+    <div id="errs"></div>
+  </section>
+
+  <section id="s4" aria-label="Verification">
+    <h2>Step 4: How every number was checked</h2>
+    <div class="card scroll"><table>
+      <tr><th>Item</th><th>Method</th><th>Result</th></tr>
+      <tr><td>Sales, gross profit, net profit</td><td>Recalculated in Sheets</td><td>Correct</td></tr>
+      <tr><td>Break-even and payback</td><td>Recalculated from fixed costs</td><td>Corrected: payback is about 14.4 months</td></tr>
+      <tr><td>Ingredient cost 40%</td><td>Compared with a second AI</td><td>Reasonable, kept as an assumption</td></tr>
+      <tr><td>Market growth, competitors, licence time</td><td>Could not be verified</td><td>Marked as assumptions</td></tr>
+      <tr><td>Rent and salaries</td><td>Fictional business</td><td>Assumed values</td></tr>
+    </table></div>
+    <p>Rule used: if a number could not be proved, it was labelled as an assumption instead of a fact.</p>
+  </section>
+
+  <section id="s5" aria-label="Time comparison">
+    <h2>Step 5: Time with AI vs without AI</h2>
+    <p>Student-reported times for each section. You can edit any box and the totals update on their own.</p>
+    <div class="card scroll"><table id="tt">
+      <tr><th>Section</th><th>Without AI (min)</th><th>With AI (min)</th><th>Time saved</th></tr>
+    </table></div>
+    <p id="tmsg" aria-live="polite">Enter times to see the result.</p>
+    <p>Without AI: 1.5 h, 1 h, 2 h, 3 h and 1 h. With AI: 5, 30, 10, 5 and 2 minutes.</p>
+  </section>
+
+  <section id="s6" aria-label="Before and after">
+    <h2>Step 6: Before and after</h2>
+    <div class="scroll"><div class="ba">
+      <div class="h">Area</div><div class="h">First AI draft</div><div class="h">After checking</div>
+      <div>Profit margin</div><div>About 45%</div><div>About 14%</div>
+      <div>Break-even</div><div>Month 2</div><div>61 customers a day; payback 14.4 months</div>
+      <div>Customers</div><div>500 a day from ads</div><div>80 a day (range 60 to 100)</div>
+      <div>Market figures</div><div>Confident, no source</div><div>Marked as assumptions</div>
+      <div>Table totals</div><div>Some did not add up</div><div>All recalculated</div>
+    </div></div>
+  </section>
+
+  <section id="peer" aria-label="Peer feedback">
+    <h2>Peer feedback</h2>
+    <p>The screen could not be shared, so the website was reviewed directly by a student peer.</p>
+    <div class="card">
+      <label for="pn">Reviewer name</label>
+      <input class="fld" id="pn" type="text" value="Divya">
+      <label for="pr">Role</label>
+      <input class="fld" id="pr" type="text" value="Student (peer)">
+      <label for="pd">Date</label>
+      <input class="fld" id="pd" type="text" value="24 October 2026">
+      <label for="pf">Feedback</label>
+      <textarea class="fld" id="pf">The website is good and useful.</textarea>
+    </div>
+  </section>
+
+  <section id="s7" aria-label="Conclusion">
+    <h2>Conclusion</h2>
+    <div class="card">
+      <h3>Answer to the project question</h3>
+      <p>Yes, AI can write a useful first draft quickly. The parts most likely to be wrong are the <b>financial numbers</b> and the <b>market statistics</b>.</p>
+      <ul>
+        <li>AI sounds confident even when it invents figures, so every number must be checked.</li>
+        <li>Use AI for structure and wording. Use people and tools like Sheets for the facts.</li>
+        <li>Responsible use: label assumptions, keep an error log, and never present AI figures as facts.</li>
+      </ul>
+    </div>
+    <p><b>Thank you. Questions?</b></p>
+  </section>
+</div>
+
+<div class="nav">
+  <button id="back" type="button">Back</button>
+  <button id="next" type="button">Next</button>
+</div>
+
+<script>
+(function(){
+  var secs=[].slice.call(document.querySelectorAll("section")),i=0,N=secs.length;
+  var fill=document.getElementById("fill"),count=document.getElementById("count"),pb=document.getElementById("pb");
+  var back=document.getElementById("back"),next=document.getElementById("next");
+  function show(n){
+    i=Math.max(0,Math.min(N-1,n));
+    secs.forEach(function(s,k){s.classList.toggle("on",k===i)});
+    fill.style.width=((i+1)/N*100)+"%";pb.setAttribute("aria-valuenow",i+1);pb.setAttribute("aria-valuemax",N);
+    count.textContent="Step "+(i+1)+" of "+N;
+    back.disabled=i===0;next.disabled=i===N-1;
+    window.scrollTo(0,0);
+    try{history.replaceState(null,"","#s"+i)}catch(e){}
+  }
+  back.onclick=function(){show(i-1)};next.onclick=function(){show(i+1)};
+  document.addEventListener("keydown",function(e){
+    if(e.target.tagName==="INPUT"&&e.target.type==="number")return;
+    if(e.key==="ArrowRight")show(i+1);if(e.key==="ArrowLeft")show(i-1);
+  });
+  document.getElementById("theme").onclick=function(){
+    var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(r.getAttribute("data-theme")!=="light"&&matchMedia("(prefers-color-scheme:dark)").matches);
+    r.setAttribute("data-theme",dark?"light":"dark");
+  };
+
+  /* Step 1: drafts */
+  var drafts=[
+   ["Executive summary","Write a 150-word executive summary for a fictional small bakery near a college. Include the target customers, what makes it different and the setup cost of Rs. 6,00,000.","Sweet Crumbs Bakery is a neighbourhood bakery near a college and homes. It sells fresh bread, cakes and cookies at affordable prices, with custom birthday cakes. Setup cost is Rs. 6,00,000."],
+   ["Market","Describe the market for a small neighbourhood bakery near a college in India. Mark every statistic as verified or assumption and do not invent numbers.","Customers: students, families and office workers. Competitors: two small bakeries and a supermarket counter (assumed). Our edge: daily fresh baking and student deals."],
+   ["Operations","List the daily operations, staff roles and equipment for a 400 sq ft bakery with 3 staff, in simple bullet points.","Open 7 am to 9 pm, 26 days a month. Head baker, assistant and counter staff. Oven, mixer, display counter, fridge and billing system."],
+   ["Marketing","Suggest a low-budget marketing plan (under Rs. 8,000 per month) for a small bakery using Instagram, WhatsApp and college tie-ups.","Daily specials on Instagram and WhatsApp, a student card with 10% off on weekdays, bulk orders for clubs and offices, and a Google Maps listing."],
+   ["Financial outline","Create a simple monthly revenue and cost outline for a small bakery. Show formulas. State all assumptions clearly.","80 customers a day at Rs. 140 for 26 days. Ingredients 40% of sales. Fixed costs Rs. 1,33,000 a month. See Step 2 for the live model."]
+  ];
+  var tabs=document.getElementById("tabs"),box=document.getElementById("draftbox");
+  function pick(k){
+    [].forEach.call(tabs.children,function(b,j){b.setAttribute("aria-selected",j===k)});
+    box.innerHTML="<h3>Prompt</h3><div class=\"prompt\">"+drafts[k][1]+"</div><h3 style=\"margin-top:14px\">Draft idea from AI</h3><p>"+drafts[k][2]+"</p>";
+  }
+  drafts.forEach(function(d,k){var b=document.createElement("button");b.type="button";b.setAttribute("role","tab");b.textContent=d[0];b.onclick=function(){pick(k)};tabs.appendChild(b)});
+  pick(0);
+
+  /* Step 2: model */
+  var FIX=133000,SETUP=600000;
+  function inr(n){return "Rs. "+Math.round(n).toLocaleString("en-IN")}
+  function ids(x){return document.getElementById(x)}
+  function calc(){
+    var c=+ids("cust").value,a=+ids("aov").value,d=+ids("days").value,g=+ids("cogs").value;
+    ids("vcust").textContent=c;ids("vaov").textContent="Rs. "+a;ids("vdays").textContent=d;ids("vcogs").textContent=g+"%";
+    var sales=c*a*d,gp=sales*(1-g/100),net=gp-FIX,be=FIX/((1-g/100)*a*d);
+    ids("o1").textContent=inr(sales);ids("o2").textContent=inr(gp);
+    var o3=ids("o3");o3.textContent=inr(net);o3.className=net<0?"neg":"pos";
+    ids("o4").textContent=Math.ceil(be)+" a day";
+    ids("o5").textContent=net>0?(SETUP/net).toFixed(1)+" months":"Not recovered";
+  }
+  ["cust","aov","days","cogs"].forEach(function(x){ids(x).oninput=calc});calc();
+
+  /* Step 3: errors */
+  var errs=[
+   ["Market","The local bakery market grows 25% every year.","No source was given. The figure may be invented or from another country.","Removed the figure and marked growth as an assumption to verify."],
+   ["Financials","Net profit margin will be 45%.","Unrealistic for a small bakery, which has thin margins.","Rebuilt the model. The real margin is about 14%."],
+   ["Operations","Break-even in month 2.","Ignored the setup cost and the slow start with new customers.","Break-even is 61 customers a day. Setup payback is about 14.4 months."],
+   ["Marketing","Social media ads will bring 500 customers a day.","Far above shop capacity and the Rs. 8,000 marketing budget.","Capped at 80 customers a day in the base case."],
+   ["Operations","A food licence takes 1 day.","Licences usually take longer and need documents.","Marked as: check with the local authority."]
+  ];
+  var eb=ids("errs");
+  errs.forEach(function(e,k){
+    var d=document.createElement("div");d.className="err";
+    d.innerHTML="<h3>"+e[0]+"</h3><p class=\"said\">AI said: “"+e[1]+"”</p><button class=\"btn\" type=\"button\" aria-expanded=\"false\">Check it</button><div class=\"reveal\"><div class=\"tagbad\"><b>Problem:</b> "+e[2]+"</div><div class=\"tagok\"><b>Fix:</b> "+e[3]+"</div></div>";
+    var b=d.querySelector("button");
+    b.onclick=function(){var o=d.classList.toggle("open");b.setAttribute("aria-expanded",o);b.textContent=o?"Hide":"Check it"};
+    eb.appendChild(d);
+  });
+
+  /* Step 5: time */
+  var secsT=["Executive summary","Market","Operations","Marketing","Financial outline"],tt=ids("tt");
+  secsT.forEach(function(s,k){
+    var r=tt.insertRow();r.innerHTML="<td>"+s+"</td><td><input type=\"number\" min=\"0\" inputmode=\"numeric\" aria-label=\""+s+" without AI minutes\" data-k=\"a"+k+"\"></td><td><input type=\"number\" min=\"0\" inputmode=\"numeric\" aria-label=\""+s+" with AI minutes\" data-k=\"b"+k+"\"></td><td data-s=\""+k+"\">-</td>";
+  });
+  var tr=tt.insertRow();tr.innerHTML="<td><b>Total</b></td><td id=\"ta\">-</td><td id=\"tb\">-</td><td id=\"ts\">-</td>";
+  function tcalc(){
+    var A=0,Bt=0,any=false;
+    secsT.forEach(function(s,k){
+      var a=tt.querySelector("[data-k=a"+k+"]").value,b=tt.querySelector("[data-k=b"+k+"]").value,cell=tt.querySelector("[data-s=\""+k+"\"]");
+      if(a!==""&&b!==""){var df=a-b;cell.textContent=(df>=0?"":"-")+Math.abs(df)+" min";A+=+a;Bt+=+b;any=true}else cell.textContent="-";
+    });
+    ids("ta").textContent=any?A+" min":"-";ids("tb").textContent=any?Bt+" min":"-";
+    ids("ts").textContent=any?(A-Bt)+" min":"-";
+    ids("tmsg").textContent=!any?"Enter times to see the result.":(A>Bt?"AI-assisted drafting was faster by "+(A-Bt)+" minutes ("+Math.round((A-Bt)/A*100)+"%).":"With checking included, AI did not save time in this test.");
+  }
+  tt.addEventListener("input",tcalc);
+  var pa=[90,60,120,180,60],pb2=[5,30,10,5,2];
+  secsT.forEach(function(s,k){tt.querySelector("[data-k=a"+k+"]").value=pa[k];tt.querySelector("[data-k=b"+k+"]").value=pb2[k]});
+  tcalc();
+
+  var m=/^#s(\d)$/.exec(location.hash);show(m?+m[1]:0);
+})();
+</script>
+</body>
+</html>
